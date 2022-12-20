@@ -83,4 +83,4 @@ async function listMail(auth) {
   };
 }
 
-authorization.authorize().then(listMail).catch(console.error);
+authorization.authorize().then(listMail).catch(logging.error);
