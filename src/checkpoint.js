@@ -1,4 +1,5 @@
 fs = require('fs').promises
+const logging = require("./logging").logger;
 
 const CheckpointFileName = ".bh_scrape_checkpoint_state"
 
@@ -12,7 +13,7 @@ exports.getCheckpoint = async function() {
         const content = await fs.readFile(`./${CheckpointFileName}`);
         const checkpoint = JSON.parse(content);
         const checkpointDate = new Date(parseInt(checkpoint.date));
-        console.log(`Checkpoint date loaded: ${checkpointDate}.`);
+        logging.debug(`Checkpoint date loaded: ${checkpointDate}.`);
         return checkpointDate;
     } catch (err) {
         return null;

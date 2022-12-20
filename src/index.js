@@ -1,7 +1,8 @@
-const {google} = require('googleapis');
-const imageDownloader = require('image-downloader')
-const authorization = require('./authorization');
-const checkpoint = require('./checkpoint');
+const {google} = require("googleapis");
+const imageDownloader = require("image-downloader")
+const authorization = require("./authorization");
+const checkpoint = require("./checkpoint");
+const logging = require("./logging").logger;
 
 //
 // Search for things that look like image Urls in the mail body.
@@ -54,7 +55,7 @@ async function listMail(auth) {
 
     if (checkpointDate != null && to_date <= checkpointDate)
     {
-      console.log(`Skipping previously downloaded photos for ${to_date.toLocaleDateString()}.`);
+      logging.debug(`Skipping previously downloaded photos for ${to_date.toLocaleDateString()}.`);
       continue;
     }
     
@@ -66,7 +67,7 @@ async function listMail(auth) {
 
     const images = getImagesFromMail(mailBody);
 
-    console.log(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
+    logging.debug(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
     var i = 1;
     for (img of images)
     {
