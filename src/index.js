@@ -51,7 +51,7 @@ async function listMail(auth) {
     });
 
     var to_date = new Date(parseInt(mail.data.internalDate));
-    var fileDate = to_date.toLocaleDateString().replace(/\//g, "-");
+    var fileDate = `${to_date.getFullYear()}-${("00" + (to_date.getMonth() + 1)).slice(-2)}-${("00" + to_date.getDate()).slice(-2)}`
 
     if (checkpointDate != null && to_date <= checkpointDate)
     {
@@ -83,4 +83,4 @@ async function listMail(auth) {
   };
 }
 
-authorization.authorize().then(listMail).catch(logging.error);
+authorization.authorize().then(listMail).catch(logging.error.bind(logging));
