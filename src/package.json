@@ -1,6 +1,8 @@
 {
+  "type": "module",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
+    "file-type": "^18.7.0",
     "googleapis": "^105.0.0",
     "image-downloader": "^4.3.0",
     "log4js": "^6.7.1"

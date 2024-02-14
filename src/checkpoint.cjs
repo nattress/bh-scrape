@@ -1,5 +1,5 @@
 fs = require('fs').promises
-const logging = require("./logging").logger;
+const logging = require("./logging.cjs").logger;
 
 const CheckpointFileName = ".bh_scrape_checkpoint_state"
 

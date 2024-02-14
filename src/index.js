@@ -1,8 +1,17 @@
-const {google} = require("googleapis");
-const imageDownloader = require("image-downloader")
-const authorization = require("./authorization");
-const checkpoint = require("./checkpoint");
-const logging = require("./logging").logger;
+import {google, Auth, Common} from "googleapis";
+import fs from "fs";
+import imageDownloader from "image-downloader";
+import authorization from "./authorization.cjs";
+import checkpoint from "./checkpoint.cjs";
+import logging from "./logging.cjs";
+import {fileTypeFromFile} from 'file-type';
+
+//
+// Config
+//
+
+//const SaveFolder = "C:\\Users\\Simon\\Dropbox\\maira_in";
+const SaveFolder = "C:\\temp";
 
 //
 // Search for things that look like image Urls in the mail body.
@@ -55,7 +64,7 @@ async function listMail(auth) {
 
     if (checkpointDate != null && to_date <= checkpointDate)
     {
-      logging.debug(`Skipping previously downloaded photos for ${to_date.toLocaleDateString()}.`);
+      logging.logger.debug(`Skipping previously downloaded photos for ${to_date.toLocaleDateString()}.`);
       continue;
     }
     
@@ -63,19 +72,34 @@ async function listMail(auth) {
     let data, buff;
     data = body_content;
     buff = new Buffer.from(data, "base64");
-    mailBody = buff.toString();
+    var mailBody = buff.toString();
 
     const images = getImagesFromMail(mailBody);
 
-    logging.debug(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
+    logging.logger.debug(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
     var i = 1;
-    for (img of images)
+    for (var img of images)
     {
-      imageDownloader.image({
+      let imageFileName = `${SaveFolder}\\${fileDate}_${i}.png`;
+      let mp4FileName = `${SaveFolder}\\${fileDate}_${i}.mp4`;
+
+      await imageDownloader.image({
         url: img,
-        dest: `C:\\Users\\nattr\\Dropbox\\maira_in\\${fileDate}_${i}.jpg`
+        dest: imageFileName
       });
 
+      var type = await fileTypeFromFile(imageFileName);
+
+      console.log(type);
+
+      if (type.mime != "image/png")
+      {
+        console.log("Ooh, a video :)");
+        await fs.rename(imageFileName, mp4FileName, (err) => {
+          if (err) console.log("Error:" + err);
+        });
+      }
+      
       i++;
     }
 
@@ -83,4 +107,4 @@ async function listMail(auth) {
   };
 }
 
-authorization.authorize().then(listMail).catch(logging.error.bind(logging));
+authorization.authorize().then(listMail).catch(logging.logger.error.bind(logging.logger));
