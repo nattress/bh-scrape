@@ -10,8 +10,8 @@ import {fileTypeFromFile} from 'file-type';
 // Config
 //
 
-//const SaveFolder = "C:\\Users\\Simon\\Dropbox\\maira_in";
-const SaveFolder = "C:\\temp";
+const SaveFolder = "C:\\Users\\Simon\\Dropbox\\maira_in";
+//const SaveFolder = "C:\\temp";
 
 //
 // Search for things that look like image Urls in the mail body.
@@ -92,7 +92,7 @@ async function listMail(auth) {
 
       console.log(type);
 
-      if (type.mime != "image/png")
+      if (type.mime != "image/png" && type.mime != "image/jpeg")
       {
         console.log("Ooh, a video :)");
         await fs.rename(imageFileName, mp4FileName, (err) => {
