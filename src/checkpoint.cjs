@@ -7,10 +7,10 @@ const CheckpointFileName = ".bh_scrape_checkpoint_state"
  * Retrieves the latest checkpoint converting the GMail message date to a Date
  * object.
  */
-exports.getCheckpoint = async function() {
+exports.getCheckpoint = async function(child) {
     try
     {
-        const content = await fs.readFile(`./${CheckpointFileName}`);
+        const content = await fs.readFile(`./${CheckpointFileName}.${child}`);
         const checkpoint = JSON.parse(content);
         const checkpointDate = new Date(parseInt(checkpoint.date));
         logging.debug(`Checkpoint date loaded: ${checkpointDate}.`);
@@ -25,8 +25,8 @@ exports.getCheckpoint = async function() {
  * recently scraped mail.
  * @param {*} gmailIndernalDate 
  */
-exports.setCheckpoint = async function(gmailIndernalDate) {
+exports.setCheckpoint = async function(child, gmailIndernalDate) {
     var saveModel = {date: gmailIndernalDate};
     const saveBytes = JSON.stringify(saveModel);
-    await fs.writeFile(`./${CheckpointFileName}`, saveBytes);
+    await fs.writeFile(`./${CheckpointFileName}.${child}`, saveBytes);
 }
