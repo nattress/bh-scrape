@@ -11,7 +11,7 @@ import {fileTypeFromFile} from 'file-type';
 //
 const Children = ["maira", "george"];
 
-const SaveFolder = "C:\\Users\\Simon\\Dropbox";
+const SaveFolder = "C:\\Users\\Simon\\Dropbox\\maira_in";
 //const SaveFolder = "C:\\temp";
 
 //
@@ -73,8 +73,8 @@ async function downloadImagesForChild(gmail, child, last72Hours)
     logging.logger.debug(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
     var i = 1;
     for (var img of images) {
-      let imageFileName = `${SaveFolder}\\${child}_in\\${fileDate}_${i}.png`;
-      let mp4FileName = `${SaveFolder}\\${child}_in\\${fileDate}_${i}.mp4`;
+      let imageFileName = `${SaveFolder}\\${fileDate}_${i}_${child}.png`;
+      let mp4FileName = `${SaveFolder}\\${fileDate}_${i}_${child}.mp4`;
 
       await imageDownloader.image({
         url: img,
