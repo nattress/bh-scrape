@@ -45,7 +45,7 @@ async function downloadImagesForChild(gmail, child, last72Hours)
     q: `Daily Report for ${child} after:${last72Hours.toLocaleDateString()}`
   });
 
-  const messages = res.data.messages.reverse();
+  const messages = res.data.messages?.reverse() || [];
   var checkpointDate = await checkpoint.getCheckpoint(child);
 
   for (const message of messages) {
