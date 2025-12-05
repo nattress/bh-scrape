@@ -1,10 +1,40 @@
 {
+  "name": "bh-scrape",
+  "version": "1.0.0",
+  "description": "Bright Horizons email scraper for downloading child photos and videos",
   "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test-runner.js",
+    "test:unit": "node --test test/utils.test.js test/config.test.js test/index.test.js",
+    "test:integration": "node --test test/integration.test.js",
+    "test:watch": "node --test --watch test/**/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage test/**/*.test.js",
+    "lint": "echo 'Linting with built-in Node.js tools...' && node --check *.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "gmail",
+    "scraper",
+    "images",
+    "bright-horizons",
+    "automation"
+  ],
+  "author": "Simon Nattress",
+  "license": "MIT",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
     "file-type": "^18.7.0",
     "googleapis": "^105.0.0",
     "image-downloader": "^4.3.0",
     "log4js": "^6.7.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nattress/bh-scrape.git"
   }
 }
