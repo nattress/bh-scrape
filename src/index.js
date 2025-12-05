@@ -19,15 +19,16 @@ const SaveFolder = "C:\\Users\\Simon\\Dropbox\\maira_in";
 //
 function getImagesFromMail(mailBody)
 {
-  const searchTerm = "https://productionmbd.brighthorizons.com/m/snapshot"
+  const searchTerm = "https://mbdgw.brighthorizons.com/api/parent/medias/v1/media/m/snapshot"
   var searchIndex = mailBody.indexOf(searchTerm);
+  logging.logger.debug(`Searching for images in mail body. ${mailBody.length} characters long, first index at ${searchIndex}`);
   var images = [];
   while (searchIndex != -1)
   {
     // Read the Url up to the closing quotation mark.
     const endQuoteIndex = mailBody.indexOf("\"", searchIndex);
     const imageUrl = mailBody.slice(searchIndex, endQuoteIndex);
-
+    logging.logger.debug(`Found image URL: ${imageUrl}`);
     images.push(imageUrl);
 
     searchIndex = mailBody.indexOf(searchTerm, searchIndex + 1);
@@ -73,23 +74,28 @@ async function downloadImagesForChild(gmail, child, last72Hours)
     logging.logger.debug(`Saving ${images.length} photos for ${to_date.toLocaleDateString()}`)
     var i = 1;
     for (var img of images) {
-      let imageFileName = `${SaveFolder}\\${fileDate}_${i}_${child}.png`;
-      let mp4FileName = `${SaveFolder}\\${fileDate}_${i}_${child}.mp4`;
+      try {
+        let imageFileName = `${SaveFolder}\\${fileDate}_${i}_${child}.png`;
+        let mp4FileName = `${SaveFolder}\\${fileDate}_${i}_${child}.mp4`;
 
-      await imageDownloader.image({
-        url: img,
-        dest: imageFileName
-      });
-
-      var type = await fileTypeFromFile(imageFileName);
-
-      console.log(type);
-
-      if (type.mime != "image/png" && type.mime != "image/jpeg") {
-        console.log("Ooh, a video :)");
-        await fs.rename(imageFileName, mp4FileName, (err) => {
-          if (err) console.log("Error:" + err);
+        await imageDownloader.image({
+          url: img,
+          dest: imageFileName
         });
+
+        var type = await fileTypeFromFile(imageFileName);
+
+        console.log(type);
+
+        if (type.mime != "image/png" && type.mime != "image/jpeg") {
+          console.log("Ooh, a video :)");
+          await fs.rename(imageFileName, mp4FileName, (err) => {
+            if (err) console.log("Error:" + err);
+          });
+        }
+      } catch (error) {
+        logging.logger.error(`Failed to download/process image ${i} from ${img}:`, error.message);
+        // Continue with next image
       }
 
       i++;
